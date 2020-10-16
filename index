@@ -1,0 +1,76 @@
+<template>
+  <q-layout>
+  <q-page-container>
+    <q-page>
+       <q-img
+      v-if="!reachable"
+      src="loading.png"
+      spinner-color="white"
+      
+      
+    />
+     <iframe
+      v-if="reachable"
+      id="theFrame"
+      src="https://scanlibs.com/"
+       style="width:100%;"
+       height="850px"
+       frameborder="0">
+</iframe>
+    </q-page>
+  </q-page-container>
+</q-layout>
+   
+</template>
+
+<script>
+import Router from 'vue-router'
+export default {
+  name: 'PageIndex',
+   data () {
+    return {
+      reachable: false,
+    }
+  },
+  methods: {
+  },
+  mounted () {
+  //  this.$q.notify({
+  //       spinner: true,
+  //       message: 'Please wait...',
+  //       timeout: 2000
+  //     })
+       const notif = this.$q.notify({
+        group: false, // required to be updatable
+        timeout: 0, // we want to be in control when it gets dismissed
+        spinner: false,
+        message: 'Please wait...'
+        // caption: 'Loading'
+      })
+ fetch('https://router.vuejs.org/', {mode: 'no-cors'}).then(r=>{
+  // console.log('google is reachable');
+  // this.$q.notify({
+  //       message: 'Your Application loadded successfully!',
+  //       caption: 'Congratulations',
+  //       color: 'secondary'
+  //     })
+      notif({
+            icon: 'done', // we add an icon
+            spinner: false, // we reset the spinner setting so the icon can be displayed
+            message: 'Your application loadded successfully!',
+            timeout: 2500 // we will timeout it in 2.5s
+          })
+  this.reachable= true
+  })
+  .catch(e=>{
+    notif()
+    this.$q.notify({
+        message: 'There are an error with your connection, try later',
+        caption: 'Connection Error',
+        color: 'danger'
+      })
+    });
+  }
+  
+}
+</script>
